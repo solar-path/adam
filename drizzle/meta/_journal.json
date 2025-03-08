@@ -15,6 +15,20 @@
       "when": 1741418785304,
       "tag": "0001_loud_pandemic",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1741419097054,
+      "tag": "0002_odd_human_robot",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1741420283355,
+      "tag": "0003_complete_romulus",
+      "breakpoints": true
     }
   ]
 }
