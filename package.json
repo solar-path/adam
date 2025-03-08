@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --watch src/api.ts",
-    "drizzle": "bunx drizzle-kit generate && bunx drizzle-kit migrate",
+    "drizzle": "bunx drizzle-kit generate --dialect sqlite --schema ./src/lib/schema.ts && bun run src/lib/migrate.ts",
     "db:studio": "bunx drizzle-kit studio"
   },
   "devDependencies": {
