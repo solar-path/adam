@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/bun-sqlite';
 import { Database } from 'bun:sqlite';
 import { z } from 'zod';
-import * as schema from './schema';
+import * as schema from './schema.drizzle';
 
 const envSchema = z.object({
   DB_FILE_NAME: z.string().min(1),
