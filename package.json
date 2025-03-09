@@ -1,26 +1,19 @@
 {
   "name": "adam",
-  "module": "src/index.ts",
+  "module": "index.ts",
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run src/api.ts",
-    "drizzle": "bunx drizzle-kit generate && bun run src/lib/migrate.ts"
+    "dev": "bun run api.ts"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.4",
-    "drizzle-kit": "^0.30.5"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.4.3",
-    "@lucia-auth/adapter-sqlite": "^3.0.2",
-    "drizzle-orm": "^0.40.0",
-    "hono": "^4.7.4",
-    "lucia": "^3.2.2",
-    "oslo": "^1.2.1",
-    "zod": "^3.24.2"
+    "hono": "^4.7.4"
   }
 }

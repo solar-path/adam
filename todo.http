@@ -1,0 +1,34 @@
+@baseUrl = http://localhost:3000
+
+
+### Get all todos
+GET {{baseUrl}}/todo
+Content-Type: application/json
+
+### Get a specific todo
+GET {{baseUrl}}/todo/1
+Content-Type: application/json
+
+### Create a new todo
+POST {{baseUrl}}/todo
+Content-Type: application/json
+
+{
+    "title": "Learn Hono"
+}
+
+### Update todo status
+PATCH {{baseUrl}}/todo/1/status
+Content-Type: application/json
+
+{
+    "status": "completed"
+}
+
+### Delete a todo
+DELETE {{baseUrl}}/todo/1
+Content-Type: application/json
+
+### Get a non-existent todo
+GET {{baseUrl}}/todo/999
+Content-Type: application/json
