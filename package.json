@@ -4,16 +4,20 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run --watch src/api.ts"
+    "dev": "bun run --watch src/api.ts",
+    "drizzle": "bunx drizzle-kit generate && bun run ./src/lib/migrate"
+
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "^1.2.4",
+    "drizzle-kit": "^0.30.5"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.4.3",
+    "drizzle-orm": "^0.40.0",
     "hono": "^4.7.4"
   }
 }
