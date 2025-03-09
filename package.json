@@ -1,23 +1,11 @@
 {
   "name": "adam",
-  "module": "api.ts",
+  "module": "index.ts",
   "type": "module",
-  "scripts": {
-    "dev": "bun run --watch src/api.ts",
-    "drizzle": "bunx drizzle-kit generate --dialect sqlite --schema ./src/lib/schema.ts && bun run src/lib/migrate.ts",
-    "db:studio": "bunx drizzle-kit studio"
-  },
   "devDependencies": {
-    "@types/bun": "^1.2.4",
-    "drizzle-kit": "^0.30.5"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "@hono/zod-validator": "^0.4.3",
-    "drizzle-orm": "^0.40.0",
-    "hono": "^4.7.4",
-    "htmx.org": "2.0.4"
   }
 }
