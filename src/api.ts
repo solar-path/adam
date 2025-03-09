@@ -39,8 +39,10 @@ app.use(logger())
 
 app.get("/*", serveStatic({ root: './public' }))
 
+//Get bun version 
+.get('/version', c=>c.text(Bun.version))
 // Get all todos
-app.get('/todo', (c) => c.json({
+.get('/todo', (c) => c.json({
     result: todoList
 }))
 // Get todo by id
