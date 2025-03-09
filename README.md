@@ -1,15 +1,11 @@
-# adam
 
-To install dependencies:
+# HTMX
 
-```bash
-bun install
+## get request 
+this will get the version of bun on button click and place it in the div with id version
+```html
+<button hx-get="/version" hx-target="#version">
+    get version
+</button>
+<div id="version"></div>
 ```
-
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.2.4. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.

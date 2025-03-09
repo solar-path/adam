@@ -3,6 +3,7 @@ import { logger } from "hono/logger";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { serveStatic } from "hono/bun";
+
 const app = new Hono();
 
 const TodoSchema = z.object({
@@ -35,18 +36,40 @@ const todoList: Todo[] = [
     }
 ];
 
+const renderTodoRow = (todo: Todo) => `
+    <tr class="${todo.status === 'completed' ? 'completed' : ''}">
+        <td>${todo.id}</td>
+        <td>${todo.title}</td>
+        <td>${todo.status}</td>
+        <td>
+            <button class="delete-btn" 
+                    hx-delete="/todo/${todo.id}" 
+                    hx-target="closest tr" 
+                    hx-swap="outerHTML">Delete</button>
+            <button class="status-btn"
+                    hx-patch="/todo/${todo.id}/status" 
+                    hx-target="closest tr"
+                    hx-swap="outerHTML"
+                    hx-vals='{"status": "${todo.status === 'completed' ? 'pending' : 'completed'}"}'
+            >${todo.status === 'completed' ? '↺ Mark Pending' : '✓ Complete'}</button>
+        </td>
+    </tr>
+`;
+
 app.use(logger())
+app.use('/*', serveStatic({ root: './public' }))
 
-app.get("/*", serveStatic({ root: './public' }))
+// Get bun version 
+app.get('/version', c => c.text(Bun.version))
 
-//Get bun version 
-.get('/version', c=>c.text(Bun.version))
 // Get all todos
-.get('/todo', (c) => c.json({
-    result: todoList
-}))
+app.get('/todo', (c) => {
+    const todosHtml = todoList.map(renderTodoRow).join('')
+    return c.html(todosHtml)
+})
+
 // Get todo by id
-.get('/todo/:id', 
+app.get('/todo/:id', 
     zValidator('param', z.object({
         id: z.string().transform((val) => Number(val))
     })),
@@ -58,43 +81,52 @@ app.get("/*", serveStatic({ root: './public' }))
             return c.json({ error: 'Todo not found' }, 404);
         }
         
-        return c.json({ result: todo });
+        return c.html(renderTodoRow(todo));
     }
 )
+
 // Create new todo
-.post('/todo',
-    zValidator('json', CreateTodoSchema),
-    (c) => {
-        const { title } = c.req.valid('json');
+app.post('/todo',
+    async (c) => {
+        const body = await c.req.parseBody();
+        const title = body.title;
+        
+        if (typeof title !== 'string' || !title.trim()) {
+            return c.json({ error: 'Invalid title' }, 400);
+        }
+
         const newTodo: Todo = {
             id: todoList.length > 0 ? Math.max(...todoList.map(t => t.id)) + 1 : 1,
-            title,
+            title: title.trim(),
             status: 'pending'
         };
         
         todoList.push(newTodo);
-        return c.json({ result: newTodo }, 201);
+        return c.html(renderTodoRow(newTodo));
     }
 )
+
 // Update todo status
-.patch('/todo/:id/status',
+app.patch('/todo/:id/status',
     zValidator('param', z.object({
         id: z.string().transform((val) => Number(val))
     })),
-    zValidator('json', z.object({
-        status: z.enum(['pending', 'completed'])
-    })),
-    (c) => {
+    async (c) => {
         const { id } = c.req.valid('param');
-        const { status } = c.req.valid('json');
-        
+        const body = await c.req.parseBody();
+        const status = body.status;
+
+        if (status !== 'pending' && status !== 'completed') {
+            return c.json({ error: 'Invalid status' }, 400);
+        }
+
         const todo = todoList.find(todo => todo.id === id);
         if (!todo) {
             return c.json({ error: 'Todo not found' }, 404);
         }
         
         todo.status = status;
-        return c.json({ result: todo });
+        return c.html(renderTodoRow(todo));
     }
 )
 
@@ -112,7 +144,7 @@ app.delete('/todo/:id',
         }
         
         todoList.splice(index, 1);
-        return c.json({ result: 'Todo deleted successfully' });
+        return c.text(''); // HTMX will remove the element on empty response
     }
 )
 
