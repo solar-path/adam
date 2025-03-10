@@ -35,13 +35,13 @@ const renderTodoRow = (todo: Todo) => `
                     hx-target="closest tr" 
                     hx-swap="outerHTML"
                     hx-confirm="Are you sure you want to delete this todo?">
-                Delete
+                X
             </button>
             <button class="toggle-btn"
                     hx-patch="/todo/${todo.id}/status"
                     hx-target="closest tr"
                     hx-swap="outerHTML">
-                Toggle Status
+                ${todo.status === 'pending' ? 'Complete' : 'Pending'}
             </button>
         </td>
     </tr>
@@ -89,7 +89,7 @@ app.post('/todo',
             id: newId,
             title: title.trim(),
             status: 'pending',
-            createdAt: new Date().toISOString().replace('T', ' '),
+            createdAt: new Date().toISOString(),
             updatedAt: null
         };
         
